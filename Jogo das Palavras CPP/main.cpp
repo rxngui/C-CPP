@@ -106,7 +106,7 @@ void OrdenaDicionarioIngles(char NomeArq[]){//Bubble Sort
 	int i, j, QtdeReg;
 	TpDicionario RegI, RegJ;
 	FILE *PtrDic = fopen(NomeArq,"rb+");
-	system("cls");
+	clear();
 	printf("\n\n\tOrdenando Dicionario em Ingles...");
 
 	fseek(PtrDic,0,2);
@@ -152,20 +152,18 @@ void CadDicionario(char NomeArq[])
 {
 	TpDicionario RegDic;
 	FILE *PtrDic = fopen(NomeArq,"ab+");
-	system("cls");
+	clear();
 	printf("\n\n# # #  Cadastrar Palavras no Dicionario  # # #\n");
 	printf("Palavra em Portugues: ");
-	fflush(stdin);
 	getStr(RegDic.Portugues);
 	while (strcmp(RegDic.Portugues,"\0")!=0)
 	{
 		if (BuscaPalavra(PtrDic,RegDic.Portugues)==-1)  //Não encontramos a Palavra
 		{
 			printf("Palavra em Ingles: ");
-			fflush(stdin);
 			getStr(RegDic.Ingles);
 			printf("Significado da Palavra: ");
-			fflush(stdin);
+			
 			getStr(RegDic.Significado);
 			RegDic.Pontos = (rand()%3+1) * 10;
 			printf("Pontos: %d\n\n",RegDic.Pontos);
@@ -177,7 +175,7 @@ void CadDicionario(char NomeArq[])
 		
 		Sleep(200);
 		printf("\nPalavra em Portugues: ");
-		fflush(stdin);
+		
 		getStr(RegDic.Portugues);
 	}
 	fclose(PtrDic);
@@ -187,7 +185,7 @@ void RelDicionario(char NomeArq[])
 {
 	TpDicionario RegDic;
 	FILE *PtrDic = fopen(NomeArq,"rb");
-	system("cls");
+	clear();
 	printf("\n# # #  CONTEUDO DO DICIONARIO  # # #\n\n");
 	printf("--------------------------------------------------------------------");
 	printf("\nPortugues \t\t Ingles \t Pontos \t Significado");
@@ -216,10 +214,10 @@ void ConsDicionario(char NomeArq[])
 	TpDicionario RegDic;
 	int pos;
 	FILE *PtrDic = fopen(NomeArq,"rb");
-	system("cls");
+	clear();
 	printf("\n\n# # #  Consultar Palavras no Dicionario  # # #\n");
 	printf("Palavra em Portugues: ");
-	fflush(stdin);
+	
 	getStr(RegDic.Portugues);
 	while (strcmp(RegDic.Portugues,"\0")!=0)
 	{
@@ -237,7 +235,7 @@ void ConsDicionario(char NomeArq[])
 		}
 		Sleep(200);
 		printf("\n\nConsultar a palavra em Portugues: ");
-		fflush(stdin);
+		
 		getStr(RegDic.Portugues);
 	}
 	fclose(PtrDic);
@@ -248,10 +246,10 @@ void AltDicionario(char NomeArq[])
 	TpDicionario RegDic;
 	int pos;
 	FILE *PtrDic = fopen(NomeArq,"rb+");
-	system("cls");
+	clear();
 	printf("\n\n# # #  Alterar Palavras no Dicionario  # # #\n");
 	printf("Palavra em Portugues: ");
-	fflush(stdin);
+	
 	getStr(RegDic.Portugues);
 	while (strcmp(RegDic.Portugues,"\0")!=0)
 	{
@@ -271,12 +269,12 @@ void AltDicionario(char NomeArq[])
             if (toupper(getche())=='S')
             {
                 printf("\nNOVA Palavra em Ingles: ");
-                fflush(stdin);
+                
                 getStr(RegDic.Ingles);
                 printf("\nNOVA Pontuação: ");
                 scanf("%d",&RegDic.Pontos);
                 printf("\nNOVO Significado: ");
-                fflush(stdin);
+                
                 getStr(RegDic.Significado);
                 fseek(PtrDic,pos,0);
                 fwrite(&RegDic,sizeof(TpDicionario),1,PtrDic);
@@ -285,7 +283,7 @@ void AltDicionario(char NomeArq[])
 		}
 		Sleep(200);
 		printf("\n\nConsultar a palavra em Portugues: ");
-		fflush(stdin);
+		
 		getStr(RegDic.Portugues);
 	}
 	fclose(PtrDic);
@@ -299,10 +297,10 @@ void ExclusaoFisicaDicionario(char NomeArq[])
 	int pos;
 	char AuxPalavra[25];
 	FILE *PtrDic = fopen(NomeArq,"rb");
-	system("cls");
+	clear();
 	printf("\n\n# # #  Excluir Fisicamente Palavras no Dicionario  # # #\n");
 	printf("Palavra em Portugues: ");
-	fflush(stdin);
+	
 	getStr(AuxPalavra);
 	if(strcmp(AuxPalavra,"\0")!=0)
 	{
@@ -357,10 +355,10 @@ void ConsultPalavraIngles(char NomeArq[]){
 	TpDicionario RegDic;
 	int pos;
 	FILE *PtrDic = fopen(NomeArq,"rb");
-	system("cls");
+	clear();
 	printf("\n\n# # #  Consultar Palavras no Dicionario  # # #\n");
 	printf("Palavra em Ingles: ");
-	fflush(stdin);
+	
 	getStr(RegDic.Ingles);
 	while (strcmp(RegDic.Ingles,"\0")!=0)
 	{
@@ -378,7 +376,7 @@ void ConsultPalavraIngles(char NomeArq[]){
 		}
 		Sleep(200);
 		printf("\n\nConsultar a palavra em Ingles: ");
-		fflush(stdin);
+		
 		getStr(RegDic.Ingles);
 	}
 	fclose(PtrDic);
@@ -509,12 +507,12 @@ void CadJogador(char NomeArq[]){
 	clear();
 	printf("\n\n# # # Cadastrar Nome do Jogador # # #\n");
 	printf("Digite o seu Login: ");
-	fflush(stdin);
+	
 	getStr(Player.login);
 	while (strcmp(Player.login,"\0") != 0){
 		if(BBLogin(PtrPlay,Player.login) == -1){
 			printf("Digite o seu Nome: ");
-			fflush(stdin);
+			
 			getStr(Player.Nome);
 			Player.Pontos = 0;
 			getData(Player.DataEntrada);
@@ -531,7 +529,7 @@ void CadJogador(char NomeArq[]){
 		Sleep(1000);
 		clear();
 		printf("\nDigite o login: ");
-		fflush(stdin);
+		
 		getStr(Player.login);
 	}
 	
@@ -549,8 +547,9 @@ void RelJogador(char NomeArq[])
 	printf("\n-------------------------------------------------------------------------------------------");
 	
 	fread(&RegPlay,sizeof(TpPlayer),1,PtrPlay);
-	if (feof(PtrPlay))
-	   printf("\nNao ha Jogadores Cadastrados!\n");
+	if (feof(PtrPlay)){  
+		printf("\nNao ha Jogadores Cadastrados!\n");
+	}
     else
     {
 		while (!feof(PtrPlay))
@@ -647,7 +646,7 @@ void ExclusaoFisicaJogadores(char NomeArq[]){
 		else{
 			printf("\n*** DADOS ENCONTRADOS ***\n");
 			fseek(PtrPlay,pos,0);
-			fread(&RegPlay,sizeof(TpDicionario),1,PtrPlay);
+			fread(&RegPlay,sizeof(TpPlayer),1,PtrPlay);
 			printf("\nLogin: %s",RegPlay.login);
 			printf("\nNome: %s",RegPlay.Nome);
 			printf("\nPontos: %d",RegPlay.Pontos);
@@ -661,7 +660,7 @@ void ExclusaoFisicaJogadores(char NomeArq[]){
 				while (!feof(PtrPlay))
 				{
 					if(stricmp(auxLogin,RegPlay.login) != 0)
-						fwrite(&RegPlay,sizeof(TpPlayer),1,PtrPlay);
+						fwrite(&RegPlay,sizeof(TpPlayer),1,PtrTemp);
 					fread(&RegPlay,sizeof(TpPlayer),1,PtrPlay);
 				}
 				fclose(PtrPlay);
@@ -681,8 +680,6 @@ void ExclusaoFisicaJogadores(char NomeArq[]){
 	else
 		fclose(PtrPlay);
 }
-
-
 
 //Jogo
 /*int BuscaPalavraPlay(char NomeArq1[],char NomeArq2[], char NomeArq3[]){
