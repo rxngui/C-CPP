@@ -72,7 +72,6 @@ int BBIngles(FILE *PtrDic, char Elem[]); //BuscaExaustiva
 void OrdenaDicionarioIngles(char NomeArq[]); //BubbleSort
 
 // *** Dicionario ***
-	//Lembrar do Leandro corrigir a Busca Binaria
 
 int BBIngles(FILE *PtrDic, char Elem[]){
 	TpDicionario Reg;
@@ -459,7 +458,7 @@ void OrdenaJogadores(char NomeArq[]){ //Bubble Sort //Fazer um selection sort...
 			fseek(PtrDic,j*sizeof(TpPlayer),0);
 			fread(&RegJ,sizeof(TpPlayer),1,PtrDic);
 
-			if(stricmp(RegI.login,RegJ.login) > 0)
+			if(stricmp(RegI.Nome,RegJ.Nome) > 0)
 			{
 				fseek(PtrDic,i*sizeof(TpPlayer),0);
 				fwrite(&RegJ,sizeof(TpPlayer),1,PtrDic);
@@ -485,7 +484,7 @@ void insDireta(FILE *PtrPlay){ //Insertion Sort
 	fread(&RegA,sizeof(TpPlayer),1,PtrPlay);
 	
 
-	while (QtdeReg > 1 && stricmp(RegA.Nome,RegB.Nome) < 0){
+	while (QtdeReg > 1 && stricmp(RegA.login,RegB.login) < 0){
 		fseek(PtrPlay,(QtdeReg-2)*sizeof(TpPlayer),0);
 
 		fwrite(&RegA,sizeof(TpPlayer),1,PtrPlay);
@@ -503,7 +502,7 @@ void insDireta(FILE *PtrPlay){ //Insertion Sort
 void CadJogador(char NomeArq[]){
 	TpPlayer Player;
 	FILE *PtrPlay = fopen(NomeArq,"rb+");
-
+	insDireta(PtrPlay);
 	clear();
 	printf("\n\n# # # Cadastrar Nome do Jogador # # #\n");
 	printf("Digite o seu Login: ");
@@ -712,7 +711,7 @@ char Menu(void)
 	printf("\n[C] Consultar Jogadores pelo LOGIN");
 	printf("\n[D] Alterar dados de Jogadores");
 	printf("\n[E] Excluir Jogadores");
-	printf("\n[X] Ordenar Jogadores");
+	printf("\n[X] Ordenar Jogadores pelo nome");
 	
 	textcolor(LBLUE);
 	printf("\n\n***DICIONARIO:");
@@ -787,6 +786,7 @@ void execute(){
 				ExclusaoFisicaJogadores("Archives\\Player.dat");
 				break;
 			case 'X':
+				//Ordena Jogadores pelo Nome
 				OrdenaJogadores("Archives\\Player.dat");
 				break;
 
