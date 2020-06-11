@@ -12,7 +12,6 @@
 
 
 
-
 //Definição das constantes das cores
 
 //Definição dos Registrados
@@ -36,6 +35,34 @@ struct TpJogo{
 
 //UltStructValida = ftell(PtrPlay) / sizeof(TpPlayer) - 1;
 //QtdeReg= ftell(PtrPlay) / sizeof(TpPlayer);
+
+void execute();
+
+void Moldura(int cor)
+{
+
+	int i, CI = 1,LI = 1,CF = 80,LF = 25; 
+	textcolor(cor);
+	gotoxy(CI,LI); printf("%c",201);
+	gotoxy(CF,LF); printf("%c",188);
+	gotoxy(CF,LI); printf("%c",187);
+	gotoxy(CI,LF); printf("%c",200);
+	
+	for(i=CI+1;i<CF;i++)
+	{
+		gotoxy(i,LI); printf("%c",205);
+		Sleep(10);
+		gotoxy(i,LF); printf("%c",205);
+	}
+	
+	for(i=LI+1;i<LF;i++)
+	{
+		gotoxy(CI,i); printf("%c",186);
+		Sleep(10);
+		gotoxy(CF,i); printf("%c",186);
+		
+	}
+}
 
 void getData(char str[10]){
    time_t mytime;
@@ -437,7 +464,7 @@ int ExhaustiveLogin(FILE *PtrPlay, char Login[25]){//Busca Exaustiva
       return -1;
 }
 
-void OrdenaJogadores(char NomeArq[]){ //Bubble Sort //Fazer um selection sort...
+void OrdenaJogadoresNome(char NomeArq[]){ //Bubble Sort //Fazer um selection sort...
 
 	int i, j, QtdeReg;
 	TpPlayer RegI, RegJ;
@@ -502,7 +529,7 @@ void insDireta(FILE *PtrPlay){ //Insertion Sort
 void CadJogador(char NomeArq[]){
 	TpPlayer Player;
 	FILE *PtrPlay = fopen(NomeArq,"rb+");
-	insDireta(PtrPlay);
+
 	clear();
 	printf("\n\n# # # Cadastrar Nome do Jogador # # #\n");
 	printf("Digite o seu Login: ");
@@ -680,14 +707,55 @@ void ExclusaoFisicaJogadores(char NomeArq[]){
 		fclose(PtrPlay);
 }
 
-//Jogo
-/*int BuscaPalavraPlay(char NomeArq1[],char NomeArq2[], char NomeArq3[]){
-	//chave primaria dupla
 
+int BuscaPalavraPlay(char NomeArq1[],char NomeArq2[], char Login[],char Palavra[]){
+	TpPlayer Play;
+	TpDicionario Dic;
+	FILE *PtrPlay = fopen(NomeArq1,"rb");
+	FILE *PtrDic = fopen(NomeArq1,"rb");
+	rewind(PtrPlay);
+	rewind(PtrDic);
+	fread(&Play,sizeof(TpPlayer),1,PtrPlay);
+	fread(&Dic,sizeof(TpDicionario),1,PtrDic);
+	while(!feof(PtrPlay) && stricmp(Login,Play.login)!=0)
+		fread(&Play,sizeof(TpPlayer),1,PtrPlay);
 
-}*/
+	while(!feof(PtrDic) && stricmp(Palavra,Dic.Portugues)!=0)
+		fread(&Dic,sizeof(TpDicionario),1,PtrDic);
+
+	if(!(feof(PtrPlay) && feof(PtrDic))){
+		fclose(PtrPlay); fclose(PtrDic);
+		return 1;
+	}
+      
+    else{
+		fclose(PtrPlay); fclose(PtrDic);
+		return -1;
+	}
+      
+}
+int ValidaJogo(FILE *arq, TpJogo elem){
+    TpJogo reg;
+    while(!feof(arq) & !(stricmp(reg.login,reg.Palavra) == 0 && stricmp(reg.Palavra,elem.Palavra) == 0))
+        fread(&reg,sizeof(TpJogo),1,arq);
+
+    if(!feof(arq))
+        return 1;
+    return -1;
+}
+void sortPalavra(char NomeArq[]){
+	TpDicionario Dic;
+	FILE *PtrDic = fopen(NomeArq,"rb");
+	fseek(PtrDic,0,2);
+	
+	int qtdReg = ftell(PtrDic) / sizeof(TpDicionario);
+	int pos = (rand()%qtdReg+1) * sizeof(TpDicionario);
+
+	fclose(PtrDic);
+}
 void JogoPortugues(char NomeArq[]){
 
+	
 	/*
 		Não pode repetir a palavra no Jogador
 		Cada Player vai ter seu Banco de Palavras usadas
@@ -701,49 +769,254 @@ void JogoPortugues(char NomeArq[]){
 	*/
 }
 
-char Menu(void)
+void MolduraMenorPlayers()
 {
+	int i,j;
+	
+	//bordasMenuSup
+	for(j=24; j<61; j++)
+	{
+		gotoxy(j,8);printf("%c",205);	
+	}
+	
+	//bordasMenuInf
+	for(i=24;i<61;i++)
+	{
+		gotoxy(i,16);printf("%c", 205);
+	}
+	
+	
+	//lateral
+	for(i=8;i<16;i++)	
+	{
+		gotoxy(23,i); printf("%c",186);
+		gotoxy(60,i); printf("%c",186);
+	}
+	gotoxy(23,8); printf("%c",201);
+	gotoxy(60,8); printf("%c",187);
+	gotoxy(23,16); printf("%c", 200);
+	gotoxy(60,16); printf("%c",188);
+}
+
+char MenuPlayers(){
 	clear();
 	textcolor(LYELLOW);
-	printf("\n\n***JOGADORES:");
-	printf("\n[A] Inserir Jogadores");
-	printf("\n[B] Relatorio de Jogadores");
-	printf("\n[C] Consultar Jogadores pelo LOGIN");
-	printf("\n[D] Alterar dados de Jogadores");
-	printf("\n[E] Excluir Jogadores");
-	printf("\n[X] Ordenar Jogadores pelo nome");
+	MolduraMenorPlayers();
+	textcolor(BLUE);
+	gotoxy(23,7); ;printf("----------// MENU Players //----------");
+    textcolor(LGREEN);
+    gotoxy(25,9); printf("[A] - Cadastro Jogador");
+    gotoxy(25,10); printf("[B] - Relatorio Jogador");
+    gotoxy(25,11); printf("[C] - Consultar Jogador");
+    gotoxy(25,12); printf("[D] - Alterar Jogador");
+    gotoxy(25,13); printf("[E] - Excluir Jogador");
+    gotoxy(25,14); printf("[F] - Ordenar Jogadores pelo Nome");
+    gotoxy(25,15); printf("[Esc] - Voltar");
+ 	textcolor(LWHITE);
+	gotoxy(29,18); printf("Qual opcao voce deseja ?");
+	gotoxy(30,19); printf("> ");
+
+	fflush(stdin);
+	char opc = toupper(getche());
+
+	return opc;
+}
+
+void selPlayers(char NomeArq[]){
+	char opc;
+	do{
+		opc = MenuPlayers();
+		switch(opc)
+			{
+				case 'A':
+					CadJogador(NomeArq);
+					break;
+				case 'B':
+					RelJogador(NomeArq);
+					break;
+				case 'C':
+					ConsultJogador(NomeArq);
+					break;
+				case 'D':
+					AlteraJogador(NomeArq);
+					break;
+				case 'E':
+					ExclusaoFisicaJogadores(NomeArq);
+					break;
+				case 'X':
+					//Ordena Jogadores pelo Nome
+					OrdenaJogadoresNome(NomeArq);
+					break;
+				case 27:
+					execute();
+					break;
+				default:
+					break;
+			}
+	}while(opc != 27);
 	
+}
+
+char MenuDicionario(){
+	printf("***DICIONARIO:");
+	printf("[A] Inserir Registro no Dicionario");
+	printf("[B] Relatorio de Dicionario");
+	printf("[C] Consultar Dicionario pela palavra em Portugues");
+	printf("[D] Alterar dados de Dicionario");
+	printf("[E] Excluir Registro de Dicionario");
+	printf("[F] Ordenar Dicionario");
+	printf("[G] Consulta Palavra em Ingles");
+	fflush(stdin);
+	char opc = toupper(getche());
+
+	return opc;
+}
+
+void selDicionario(char NomeArq[]){
+	char opc;
+	do{
+		opc = MenuDicionario();
+		switch(opc)
+			{
+				case 'A':
+					CadDicionario(NomeArq);
+					break;
+				case 'B':
+					RelDicionario(NomeArq);
+					break;
+				case 'C':
+					ConsDicionario(NomeArq);
+					break;
+				case 'D':
+					AltDicionario(NomeArq);
+					break;
+				case 'E':
+					ExclusaoFisicaDicionario(NomeArq);
+					break;
+				case 'F':
+					//Ordena Jogadores pelo Nome
+					OrdenaDicionarioIngles(NomeArq);
+					break;
+				case 'G':
+					OrdenaDicionarioIngles(NomeArq);
+					ConsultPalavraIngles(NomeArq);
+					break;
+				case 27:
+					execute();
+					break;	
+				default:
+					break;
+			}
+	}while(opc != 27);
+	
+}
+
+char MenuJogoPalavras(){
+	printf("***JOGO:");
+	printf("[A] Jogar em Portugues");
+	printf("[B] Jogar em Ingles");
+	printf("[C] Consultar Palavras que sairam para determinado Jogador");
+	printf("[D] Alterar Jogos");
+	printf("[E] Excluir Jogos");
+
+	fflush(stdin);
+	char opc = toupper(getche());
+
+	return opc;
+}
+
+void selJogo(char NomeArq[]){
+	char opc;
+	do{
+		opc = MenuJogoPalavras();
+		switch(opc)
+			{
+				case 'A':
+					JogoPortugues(NomeArq);
+					break;
+				case 'B':
+					//JogoIngles(NomeArq);
+					break;
+				case 'C':
+					//ConsultPalavraPlayer(NomeArq);
+					break;
+				case 'D':
+					//AlteraGame(NomeArq);
+					break;
+				case 'E':
+					//ExcluiGame(NomeArq);
+					break;	
+				default:
+					break;
+			}
+	}while(opc != 27);
+	
+}
+
+char MenuRelatorios(){
+	printf("***RELATORIOS ESPECIFICOS:");
+	printf("[A] Ranking Geral de Jogadores");
+	printf("[B] Jogadores que iniciam com uma determinada letra");
+	printf("[C] Ranking de Palavras que mais foram resolvidas em Portugues");
+	printf("[D] Geral: Jogadores e palavras que sairam");
+	printf("[E] Geral Ordenado: Palavras e os Jogadores que as jogaram");
+
+	fflush(stdin);
+	char opc = toupper(getche());
+
+	return opc;
+}
+
+void selRelat(){
+	do{
+		char opc = MenuRelatorios();
+		switch(opc)
+			{
+				case 'A':
+					//RankingGeral();
+					break;
+				case 'B':
+					//PlayerStartWithLetter("Archives\\Jogo.dat");
+					break;
+				case 'C':
+					//RankingDasPalavrasPT("Archives\\Jogo.dat");
+					break;
+				case 'D':
+					//RankGeralPlayersWords("Archives\\Jogo.dat");
+					break;
+				case 'E':
+					//RankGeralOrdenado("Archives\\Jogo.dat");
+					break;	
+				default:
+					break;
+			}
+	}while(opc != 27);
+	
+}
+
+char Menu(void){
+
+	clear();
+ 	Moldura(PURPLE);
+
+	textcolor(LYELLOW);
+	printf("|1| MANIPULAR JOGADORES");
+
 	textcolor(LBLUE);
-	printf("\n\n***DICIONARIO:");
-	printf("\n[F] Inserir Registro no Dicionario");
-	printf("\n[G] Relatorio de Dicionario");
-	printf("\n[H] Consultar Dicionario pela palavra em Portugues");
-	printf("\n[I] Alterar dados de Dicionario");
-	printf("\n[J] Excluir Registro de Dicionario");
-	printf("\n[Y] Ordenar Dicionario");
-	printf("\n[Z] Consulta Palavra em Ingles"); //Chamar a Busca Binária
+	printf("|2| MANIPULAR DICIONARIO");
 
 	textcolor(LGREEN);
-	//Acerta palavra em português
-	printf("\n\n***JOGO:");
-	printf("\n[K] Jogar em Portugues");
-	printf("\n[L] Jogar em Ingles");
-	printf("\n[M] Consultar Palavras que sairam para determinado Jogador");
-	printf("\n[N] Alterar Jogos");
-	printf("\n[O] Excluir Jogos");
-
+	printf("|3| JOGO DAS PALAVRAS");
+	
 	textcolor(LILAC);
-	printf("\n\n***RELATORIOS ESPECIFICOS:");
-	printf("\n[P] Ranking Geral de Jogadores");
-	printf("\n[Q] Jogadores que iniciam com uma determinada letra");
-	printf("\n[R] Ranking de Palavras que mais foram resolvidas em Portugues");
-	printf("\n[S] Geral: Jogadores e palavras que sairam");
-	printf("\n[T] Geral Ordenado: Palavras e os Jogadores que as jogaram");
-
+	printf("|4| RELATORIOS ESPECIFICOS");
+	
 	textcolor(RED);
-	printf("\n\n[ESC] Sair do Programa");
+	printf("[Esc] Sair do Programa");
+
 	textcolor(LWHITE);
-	printf("\n\nQual a opcao desejada? ");
+	printf("Qual a opcao desejada? ");
+
 	fflush(stdin);
 	return toupper(getche());
 }
@@ -770,49 +1043,18 @@ void execute(){
 		switch(op)
 		{
 			//Jogadores
-			case 'A':
-				CadJogador("Archives\\Player.dat");
+			case '1':
+				selPlayers("Archives\\Player.dat");
 				break;
-			case 'B':
-				RelJogador("Archives\\Player.dat");
+			case '2':
+				selDicionario("Archives\\Dicionario.dat");
 				break;
-			case 'C':
-				ConsultJogador("Archives\\Player.dat");
+			case '3':
+				selJogo("Archives\\Jogo.dat");
 				break;
-			case 'D':
-				AlteraJogador("Archives\\Player.dat");
+			case '4':
+				selRelat();
 				break;
-			case 'E':
-				ExclusaoFisicaJogadores("Archives\\Player.dat");
-				break;
-			case 'X':
-				//Ordena Jogadores pelo Nome
-				OrdenaJogadores("Archives\\Player.dat");
-				break;
-
-			//Dicionario
-			case 'F': 
-				CadDicionario("Archives\\Dicionario.dat");
-				break;
-		    case 'G':
-				RelDicionario("Archives\\Dicionario.dat");
-				break;
-			case 'H': 
-				ConsDicionario("Archives\\Dicionario.dat");
-		    	break;
-			case 'I':
-				AltDicionario("Archives\\Dicionario.dat");
-				break;
-			case 'J':
-				ExclusaoFisicaDicionario("Archives\\Dicionario.dat");
-				break;
-			case 'Y':
-				OrdenaDicionarioIngles("Archives\\Dicionario.dat");
-				break;
-			case 'Z':
-				OrdenaDicionarioIngles("Archives\\Dicionario.dat");
-				ConsultPalavraIngles("Archives\\Dicionario.dat");
-				break;	
 			default:
 				break;
 		}
@@ -821,7 +1063,22 @@ void execute(){
 
 int main(void)
 {
-	execute();
+	//execute();
+	//MenuPlayers();
+	TpDicionario Dic;
+	FILE *PtrDic = fopen("Archives\\Dicionario.dat","rb");
+	fseek(PtrDic,0,2);
+	
+	int qtdReg = ftell(PtrDic) / sizeof(TpDicionario);
+	int pos = ((rand()%qtdReg+1)-1) * sizeof(TpDicionario);
 
+	clear();
+	printf("size(Dic): %d",sizeof(TpDicionario));
+	printf("\nQtd Registros: %d",qtdReg);
+	printf("\nPos rand Word: %d",pos);
+	
+	
+	fclose(PtrDic);
+	getch();
 	return 0;
 }
