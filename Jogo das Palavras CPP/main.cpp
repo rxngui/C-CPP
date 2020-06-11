@@ -968,8 +968,9 @@ char MenuRelatorios(){
 }
 
 void selRelat(){
+	char opc;
 	do{
-		char opc = MenuRelatorios();
+		opc = MenuRelatorios();
 		switch(opc)
 			{
 				case 'A':
